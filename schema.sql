@@ -1,0 +1,26 @@
+CREATE TABLE IF NOT EXISTS clientes (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS productos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(200) NOT NULL,
+    precio NUMERIC NOT NULL,
+    stock INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS pedidos (
+    id SERIAL PRIMARY KEY,
+    cliente_id INTEGER NOT NULL REFERENCES clientes(id),
+    fecha TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS pedido_items (
+    id SERIAL PRIMARY KEY,
+    pedido_id INTEGER NOT NULL REFERENCES pedidos(id) ON DELETE CASCADE,
+    producto_id INTEGER NOT NULL REFERENCES productos(id),
+    cantidad INTEGER NOT NULL,
+    precio_unitario NUMERIC NOT NULL
+);
