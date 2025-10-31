@@ -17,14 +17,15 @@ def obtener_producto(producto_id: int):
 
 @router.post("/")
 def crear_producto(producto: Producto):
-    return {"id": ProductosManager.crear(producto)}
+    producto_id = ProductosManager.crear(producto)
+    return {"id": producto_id, "mensaje": "Producto creado exitosamente"}
 
 @router.put("/{producto_id}")
 def modificar_producto(producto_id: int, producto: Producto):
     ProductosManager.modificar(producto_id, producto)
-    return {"mensaje": "Producto modificado"}
+    return {"mensaje": "Producto modificado exitosamente"}
 
 @router.delete("/{producto_id}")
 def eliminar_producto(producto_id: int):
     ProductosManager.eliminar(producto_id)
-    return {"mensaje": "Producto eliminado"}
+    return {"mensaje": "Producto eliminado exitosamente"}

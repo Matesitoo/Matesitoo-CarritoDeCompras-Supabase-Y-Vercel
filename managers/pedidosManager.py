@@ -7,7 +7,7 @@ class PedidosManager:
     def obtener_todos():
         con = Conexion()
         cur = con.get_cursor()
-        cur.execute("SELECT * FROM pedidos")
+        cur.execute("SELECT * FROM pedidos ORDER BY fecha DESC")
         pedidos = cur.fetchall()
         con.close()
         return pedidos
@@ -27,7 +27,7 @@ class PedidosManager:
     def obtener_por_cliente(cliente_id):
         con = Conexion()
         cur = con.get_cursor()
-        cur.execute("SELECT * FROM pedidos WHERE cliente_id = %s", (cliente_id,))
+        cur.execute("SELECT * FROM pedidos WHERE cliente_id = %s ORDER BY fecha DESC", (cliente_id,))
         pedidos = cur.fetchall()
         con.close()
         return pedidos
@@ -37,12 +37,15 @@ class PedidosManager:
         con = Conexion()
         cur = con.get_cursor()
         fecha = pedido.fecha or datetime.now()
+        
+        # Crear pedido
         cur.execute(
             "INSERT INTO pedidos (cliente_id, fecha) VALUES (%s, %s) RETURNING id",
             (pedido.cliente_id, fecha)
         )
         pedido_id = cur.fetchone()["id"]
 
+        # Agregar items
         for item in pedido.items:
             cur.execute(
                 """INSERT INTO pedido_items 

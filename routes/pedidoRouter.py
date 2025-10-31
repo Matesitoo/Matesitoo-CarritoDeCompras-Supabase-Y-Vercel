@@ -14,7 +14,7 @@ def obtener_pedidos():
 @router.get("/{pedido_id}")
 def obtener_pedido(pedido_id: int):
     pedido = PedidosManager.obtener_por_id(pedido_id)
-    if not pedido:
+    if not pedido["pedido"]:
         raise HTTPException(status_code=404, detail="Pedido no encontrado")
 
     total = sum(item["cantidad"] * item["precio_unitario"] for item in pedido["items"])
@@ -32,7 +32,7 @@ def obtener_por_cliente(cliente_id: int):
 @router.post("/")
 def crear_pedido(pedido: Pedido):
     pedido_id = PedidosManager.crear(pedido)
-    return {"id": pedido_id}
+    return {"id": pedido_id, "mensaje": "Pedido creado exitosamente"}
 
 @router.get("/cliente_nombre/{nombre}")
 def obtener_por_nombre(nombre: str):
@@ -58,13 +58,11 @@ def filtrar_por_fecha(
     con = Conexion()
     cur = con.get_cursor()
     cur.execute(
-        "SELECT * FROM pedidos WHERE fecha BETWEEN %s AND %s",
+        "SELECT * FROM pedidos WHERE fecha BETWEEN %s AND %s ORDER BY fecha",
         (fecha_desde, fecha_hasta)
     )
     filas = cur.fetchall()
     con.close()
 
-    # Convertir filas a lista de diccionarios para JSON
     pedidos = [dict(fila) for fila in filas]
-
     return pedidos

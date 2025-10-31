@@ -6,7 +6,7 @@ class ClientesManager:
     def obtener_todos():
         con = Conexion()
         cur = con.get_cursor()
-        cur.execute("SELECT * FROM clientes")
+        cur.execute("SELECT * FROM clientes ORDER BY id")
         clientes = cur.fetchall()
         con.close()
         return clientes

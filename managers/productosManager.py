@@ -6,7 +6,7 @@ class ProductosManager:
     def obtener_todos():
         con = Conexion()
         cur = con.get_cursor()
-        cur.execute("SELECT * FROM productos")
+        cur.execute("SELECT * FROM productos ORDER BY id")
         productos = cur.fetchall()
         con.close()
         return productos
